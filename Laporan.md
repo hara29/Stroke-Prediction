@@ -52,11 +52,11 @@ Catatan:
 
 ### EDA
 #### Distribusi Kolom Target (At Risk)
-![Distribusi At Risk](https://drive.google.com/file/d/1aptmRf1-ozb63YT-S6qRChfVA6F8YmiK/view?usp=sharing)
+![Distribusi At Risk](https://github.com/hara29/Stroke-Prediction/blob/main/DistribusiAtRisk.png)
 Kolom "At Risk (Binary)" merupakan label klasifikasi yang menentukan apakah seseorang berisiko terkena stroke atau tidak berdasarkan berbagai faktor klinis dan gejala. Meskipun distribusi kelas menunjukkan sedikit ketidakseimbangan, namun proporsinya masih dapat diterima untuk melatih model klasifikasi tanpa perlakuan khusus balancing di tahap awal.
 
 #### Umur Vs Stroke Risk
-![Stroke Risk Vs Age](https://drive.google.com/file/d/1DIj8MUc7qqaLVj5Sqq4A34kL9LrPFLA7/view?usp=drive_link)
+![Stroke Risk Vs Age](https://github.com/hara29/Stroke-Prediction/blob/main/StrokeRiskVsAge.png)
 Dapat dilihat dari visualisasi dengan scatter plot bahwa semakin tua usia seseorang maka persentase resiko terkena stroke juga semakin tinggi. Persentase terkena stroke diatas 50% dapat dikategorikan sebagai 'At Risk' atau Beresiko Stroke.
 
 ## Data Preparation
@@ -114,8 +114,8 @@ Alasan pemilihan ini adalah:
 ### Metrik yang digunakan:
 1.  **Accuracy:**
     * **Formula:** $\frac{\text{Jumlah prediksi benar}}{\text{Total jumlah prediksi}} = \frac{TP + TN}{TP + FP + FN + TN}$
-    * **Bagaimana Metrik Ini Bekerja:** *Accuracy* mengukur seberapa sering model Anda membuat prediksi yang benar, baik untuk pasien yang sebenarnya berisiko stroke (TP) maupun pasien yang sebenarnya tidak berisiko (TN), dibandingkan dengan total seluruh prediksi.
-    * **Interpretasi:** Semakin tinggi nilai *accuracy*, semakin baik kinerja keseluruhan model dalam mengklasifikasikan risiko stroke dengan benar. Namun, perlu diingat bahwa *accuracy* bisa menyesatkan jika dataset Anda tidak seimbang (misalnya, jika jumlah pasien tidak berisiko jauh lebih banyak daripada yang berisiko).
+    * **Bagaimana Metrik Ini Bekerja:** *Accuracy* mengukur seberapa sering model membuat prediksi yang benar, baik untuk pasien yang sebenarnya berisiko stroke (TP) maupun pasien yang sebenarnya tidak berisiko (TN), dibandingkan dengan total seluruh prediksi.
+    * **Interpretasi:** Semakin tinggi nilai *accuracy*, semakin baik kinerja keseluruhan model dalam mengklasifikasikan risiko stroke dengan benar. Namun, perlu diingat bahwa *accuracy* bisa menyesatkan jika dataset tidak seimbang (misalnya, jika jumlah pasien tidak berisiko jauh lebih banyak daripada yang berisiko).
 
 2.  **Precision:**
     * **Formula:** $\frac{\text{Jumlah prediksi positif benar}}{\text{Total jumlah prediksi positif}} = \frac{TP}{TP + FP}$
@@ -130,7 +130,7 @@ Alasan pemilihan ini adalah:
 4.  **F1-Score:**
     * **Formula:** $2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}$
     * **Bagaimana Metrik Ini Bekerja:** *F1-Score* adalah rata-rata harmonik antara *precision* dan *recall*. Ini memberikan ukuran tunggal yang menyeimbangkan antara kemampuan model untuk menghindari *false positive* dan *false negative*. Rata-rata harmonik memberikan bobot yang lebih rendah pada nilai ekstrem, sehingga *F1-Score* akan rendah jika salah satu dari *precision* atau *recall* rendah.
-    * **Interpretasi:** *F1-Score* yang tinggi menunjukkan bahwa model memiliki keseimbangan yang baik antara *precision* dan *recall*. Metrik ini berguna ketika Anda ingin menyeimbangkan kedua jenis kesalahan.
+    * **Interpretasi:** *F1-Score* yang tinggi menunjukkan bahwa model memiliki keseimbangan yang baik antara *precision* dan *recall*. 
 
 5.  **ROC AUC (Receiver Operating Characteristic Area Under the Curve):**
     * **Bagaimana Metrik Ini Bekerja:** ROC curve (kurva ROC) adalah grafik yang memplot *True Positive Rate* (TPR atau *recall*) terhadap *False Positive Rate* (FPR) pada berbagai *threshold* klasifikasi. FPR dihitung sebagai $\frac{FP}{FP + TN}$. AUC adalah area di bawah kurva ROC.
