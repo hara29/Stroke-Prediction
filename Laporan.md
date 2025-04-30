@@ -17,32 +17,32 @@ Referensi: [Penanganan Kegawatdaruratan Di Rumah: Serangan Stroke dan Pencegahan
 - Menilai performa model berdasarkan metrik klasifikasi seperti accuracy, precision, recall, dan F1-score.
 
 ### Solution statements
-- Menggunakan dua model machine learning: Logistic Regression (sebagai baseline) dan Random Forest Classifier (sebagai model yang lebih kompleks).
+- Menggunakan lima model machine learning yang berbeda, yaitu Random Forest Classifier, Support Vector Machine (SVM), Gaussian Naive Bayes, Logistic Regression, XGBoost Classifier
 - Memilih model terbaik berdasarkan nilai F1-score, mengingat pentingnya keseimbangan antara precision dan recall dalam kasus medis.
 
 ## Data Understanding
-Dataset ini dirancang untuk mendukung penelitian prediksi risiko stroke menggunakan metode machine learning dan deep learning. Dataset ini berisi 7000 baris dengan 18 kolom. 
+Dataset ini dirancang untuk mendukung penelitian prediksi risiko stroke menggunakan metode machine learning dan deep learning. Dataset ini berisi 70000 baris dengan 18 kolom. Semua fitur pada dataset ini bertipe numerik, dimana gejala - gejala yang dirasakan bernilai binary (0 = Tidak merasakan, 1 = Merasakan), At Risk bernilai binary (0 = Tidak beresiko, 1 = beresiko), Stroke Risk bernilai float karena berupa persentase risiko stroke, dan Age bertipe integer berupa umur pasien. Dataset ini tidak memiliki missing value, tetapi memiliki baris duplikat sebesar 1021 baris. Terdapat outlier pada fitur Stroke Risk tetapi tidak ditangani karena hal ini normal pada medis untuk memiliki nilai persentase beresiko stroke dari rentang 5% - 100%.
 
 Dataset disusun berdasarkan literatur medis, konsultasi dengan para ahli, serta pemodelan statistik, dan mengacu pada sumber terpercaya seperti American Stroke Association (ASA), Mayo Clinic, WHO, hingga buku teks medis seperti Harrison’s Principles of Internal Medicine.
 
 Dataset yang digunakan dalam penelitian ini dapat diakses melalui tautan berikut: [Stroke Risk Prediction Dataset Based on Symptoms](https://www.kaggle.com/datasets/mahatiratusher/stroke-risk-prediction-dataset).
 
 ### Variabel-variabel pada dataset:
-- Chest Pain: 0/1, nyeri dada
-- Shortness of Breath: 0/1, sesak napas
-- Irregular Heartbeat: 0/1, detak jantung tidak teratur
-- Fatigue & Weakness: 0/1, kelelahan dan kelemahan
-- Dizziness: 0/1, pusing
-- Swelling (Edema): 0/1, pembengkakan
-- Pain in Neck/Jaw/Shoulder/Back: 0/1, nyeri di leher/rahang/bahu/punggung
-- Excessive Sweating: 0/1, keringat berlebih
-- Persistent Cough: 0/1, batuk kronis
-- Nausea/Vomiting: 0/1, mual/muntah
-- High Blood Pressure: 0/1, tekanan darah tinggi
-- Chest Discomfort (Activity): 0/1, ketidaknyamanan di dada saat aktivitas
-- Cold Hands/Feet: 0/1, tangan/kaki terasa dingin
-- Snoring/Sleep Apnea: 0/1, mendengkur/apnea tidur
-- Anxiety/Feeling of Doom: 0/1, kecemasan atau firasat buruk
+- Chest Pain: (0 = Tidak, 1 = Ya), nyeri dada
+- Shortness of Breath: (0 = Tidak, 1 = Ya), sesak napas
+- Irregular Heartbeat: (0 = Tidak, 1 = Ya), detak jantung tidak teratur
+- Fatigue & Weakness: (0 = Tidak, 1 = Ya), kelelahan dan kelemahan
+- Dizziness: (0 = Tidak, 1 = Ya), pusing
+- Swelling (Edema): (0 = Tidak, 1 = Ya), pembengkakan
+- Pain in Neck/Jaw/Shoulder/Back: (0 = Tidak, 1 = Ya), nyeri di leher/rahang/bahu/punggung
+- Excessive Sweating: (0 = Tidak, 1 = Ya), keringat berlebih
+- Persistent Cough: (0 = Tidak, 1 = Ya), batuk kronis
+- Nausea/Vomiting: (0 = Tidak, 1 = Ya), mual/muntah
+- High Blood Pressure: (0 = Tidak, 1 = Ya), tekanan darah tinggi
+- Chest Discomfort (Activity): (0 = Tidak, 1 = Ya), ketidaknyamanan di dada saat aktivitas
+- Cold Hands/Feet: (0 = Tidak, 1 = Ya), tangan/kaki terasa dingin
+- Snoring/Sleep Apnea: (0 = Tidak, 1 = Ya), mendengkur/apnea tidur
+- Anxiety/Feeling of Doom: (0 = Tidak, 1 = Ya), kecemasan atau firasat buruk
 - Stroke Risk (%): 0-100%, persentase estimasi risiko stroke
 - At Risk: 0/1, target label (1 = berisiko, 0 = tidak berisiko)
 - Age: Usia individu
@@ -52,25 +52,23 @@ Catatan:
 
 ### EDA
 #### Distribusi Kolom Target (At Risk)
-![Distribusi At Risk](https://github.com/hara29/Stroke-Prediction/blob/main/DistribusiAtRisk.png)
+<img width="477" alt="DistribusiAtRisk" src="https://github.com/user-attachments/assets/46520b8b-767c-4e83-95e0-9dbc35e348b0" /></br>
 Kolom "At Risk (Binary)" merupakan label klasifikasi yang menentukan apakah seseorang berisiko terkena stroke atau tidak berdasarkan berbagai faktor klinis dan gejala. Meskipun distribusi kelas menunjukkan sedikit ketidakseimbangan, namun proporsinya masih dapat diterima untuk melatih model klasifikasi tanpa perlakuan khusus balancing di tahap awal.
 
 #### Umur Vs Stroke Risk
-![Stroke Risk Vs Age](https://github.com/hara29/Stroke-Prediction/blob/main/StrokeRiskVsAge.png)
+<img width="711" alt="StrokeRiskVsAge" src="https://github.com/user-attachments/assets/bdea77b9-c787-430a-bb15-ace936593dcb" /></br>
 Dapat dilihat dari visualisasi dengan scatter plot bahwa semakin tua usia seseorang maka persentase resiko terkena stroke juga semakin tinggi. Persentase terkena stroke diatas 50% dapat dikategorikan sebagai 'At Risk' atau Beresiko Stroke.
 
 ## Data Preparation
 Langkah–langkah data preparation yang dilakukan.
-1. Cek informasi ringkas tentang dataframe dengan df.info()
-Untuk melihat tipe data dan cek apakah ada data yang kosong/ missing. Pada dataset ini tidak terdapat missing value.
-2. Tangani kolom duplikat
+1. Tangani kolom duplikat
 Dataset ini memiliki 1021 baris yang duplikat. Baris yang duplikat tersebut dihapus untuk meingkatkan kualitas data.
-3. Feature Selection
+2. Feature Selection
 Kolom Stroke Risk (%) di-drop karena mengandung informasi target yang seharusnya diprediksi. Kolom ini dipertahankan jika ingin melakukan tugas regresi.
+3. Train-Test Split
+Dataset dibagi menjadi training set sebesar 80% dan test set sebesar 20%.
 4. Feature Scaling
 Karena semua fitur bersifat biner (0/1) dan numerik (Age), scaling tidak wajib, tetapi dilakukan standar scaling pada Age untuk mempercepat konvergensi model Logistic Regression.
-5. Train-Test Split
-Dataset dibagi menjadi training set sebesar 80% dan test set sebesar 20%.
 
 ## Modeling
 Pada tahap ini, dilakukan pembuatan model machine learning untuk memprediksi risiko stroke berdasarkan gejala dan usia pasien. Beberapa algoritma digunakan untuk dibandingkan performanya, yaitu:
@@ -86,12 +84,50 @@ Data dibagi menjadi data latih dan data uji menggunakan metode train_test_split 
 2. Feature Scaling
 Untuk algoritma yang sensitif terhadap skala data (seperti SVM dan Logistic Regression), dilakukan scaling menggunakan StandardScaler.
 3. Model Training
-Setiap algoritma dilatih menggunakan data latih:
-    - Random Forest Classifier: menggunakan parameter default (n_estimators=100, criterion="gini", dll).
-    - Support Vector Machine (SVC): menggunakan parameter default (kernel='rbf').
-    - Gaussian Naive Bayes: menggunakan parameter default.
-    - Logistic Regression: menggunakan parameter default (penalty='l2', solver='lbfgs').
-    - XGBoost Classifier: menggunakan parameter default (n_estimators=100, learning_rate=0.1, max_depth=3, dll).
+Lima algoritma machine learning digunakan dan dilatih pada data latih. Berikut parameter yang digunakan beserta penjelasan cara kerja masing-masing model:
+
+   ---
+
+   #### a. Random Forest Classifier
+   - **Parameter yang Digunakan:**  
+     - `n_estimators=100`  
+     - `criterion='gini'` (default)
+   - **Cara Kerja:**  
+     Random Forest membangun banyak decision tree secara acak dari subset data dan fitur. Setiap pohon memberikan prediksi, dan hasil akhirnya ditentukan melalui mayoritas suara (voting). Teknik ini mengurangi overfitting dan meningkatkan akurasi prediksi.
+
+   ---
+
+   #### b. Support Vector Machine (SVC)
+   - **Parameter yang Digunakan:**  
+     - `kernel='rbf'` (default)
+   - **Cara Kerja:**  
+     SVM mencari hyperplane terbaik yang memisahkan dua kelas dengan margin maksimum. Dengan kernel RBF, data dipetakan ke ruang berdimensi lebih tinggi untuk memungkinkan pemisahan non-linear. Hanya support vectors yang memengaruhi pembentukan hyperplane.
+
+   ---
+
+   #### c. Gaussian Naive Bayes
+   - **Parameter yang Digunakan:**  
+     - Semua parameter default
+   - **Cara Kerja:**  
+     Naive Bayes menggunakan Teorema Bayes dengan asumsi bahwa fitur bersifat independen. Gaussian Naive Bayes mengasumsikan bahwa fitur terdistribusi normal. Probabilitas dihitung untuk tiap kelas, dan kelas dengan probabilitas tertinggi dipilih sebagai output.
+
+   ---
+
+   #### d. Logistic Regression
+   - **Parameter yang Digunakan:**  
+     - `penalty='l2'`, `solver='lbfgs'` (default)
+   - **Cara Kerja:**  
+     Logistic Regression menghitung kombinasi linier dari fitur dan menerapkan fungsi sigmoid untuk mengubahnya menjadi probabilitas. Model ini cocok untuk klasifikasi biner, seperti kasus prediksi risiko stroke (At Risk vs Not At Risk).
+
+   ---
+
+   #### e. XGBoost Classifier
+   - **Parameter yang Digunakan:**  
+     - `n_estimators=100`, `learning_rate=0.1`, `max_depth=3`
+   - **Cara Kerja:**  
+     XGBoost adalah metode boosting yang membangun model secara bertahap. Setiap model baru memperbaiki kesalahan prediksi dari model sebelumnya menggunakan pendekatan gradien descent. XGBoost sangat kuat dan efisien dalam menangani dataset yang kompleks.
+
+   ---
 4. Evaluasi Model
 Setiap model dievaluasi menggunakan data uji berdasarkan akurasi, precision, recall, f1-score, dan ROC AUC.
 
@@ -160,5 +196,77 @@ Alasan pemilihan ini adalah:
 
 **Kesimpulan dan Rekomendasi:**
 
-Model **Logistic Regression**, **XGBoost**, dan **Support Vector Machine (SVM)** menunjukkan hasil yang paling menjanjikan untuk prediksi risiko stroke. Mengingat pentingnya mengidentifikasi semua pasien berisiko (tinggi *recall*), **XGBoost** dan **Logistic Regression** tampak sangat baik.
+## 1. Apakah Hasil Model Menjawab Setiap *Problem Statement*?
+
+### ✅ Problem Statement 1:
+**Bagaimana cara mengklasifikasikan individu berdasarkan gejala-gejala yang mereka alami menjadi 'At Risk' atau 'Not At Risk' terkena stroke?**
+
+**Jawaban:**  
+Ya. Model yang diuji — terutama Logistic Regression, XGBoost, dan SVM — mampu mengklasifikasikan individu dengan sangat baik ke dalam dua kelas: *At Risk* dan *Not At Risk*. Hal ini terbukti dari tingginya nilai F1-score dan recall, yang menunjukkan akurasi klasifikasi yang andal.
+
+---
+
+### ✅ Problem Statement 2:
+**Seberapa akurat prediksi risiko stroke menggunakan gejala klinis sederhana tanpa memerlukan pemeriksaan medis lanjutan?**
+
+**Jawaban:**  
+Sangat akurat. Logistic Regression mencetak akurasi sempurna (1.000), disusul oleh XGBoost (0.997) dan SVM (0.990). Ini menunjukkan bahwa model dapat memprediksi risiko stroke dengan sangat tinggi hanya berdasarkan data gejala sederhana.
+
+---
+
+## 2. Apakah Berhasil Mencapai Setiap *Goal* yang Diharapkan?
+
+### ✅ Goal 1:
+**Membuat model machine learning untuk memprediksi risiko stroke (At Risk: 0/1) berdasarkan gejala-gejala yang dilaporkan.**
+
+**Status:**  
+Tercapai. Model telah dibangun dan dievaluasi dengan data gejala sederhana. Beberapa model digunakan untuk membandingkan performa.
+
+---
+
+### ✅ Goal 2:
+**Menilai performa model berdasarkan metrik klasifikasi seperti accuracy, precision, recall, dan F1-score.**
+
+**Status:**  
+Tercapai. Semua metrik dilaporkan lengkap untuk setiap model, dan hasil evaluasi menunjukkan bahwa beberapa model mencapai skor sangat tinggi.
+
+---
+
+## 3. Apakah Setiap *Solution Statement* Berdampak dan Efektif?
+
+### 🔹 Solution 1:
+**Menggunakan lima model machine learning berbeda:**
+- Random Forest Classifier
+- Support Vector Machine (SVM)
+- Gaussian Naive Bayes
+- Logistic Regression
+- XGBoost Classifier
+
+**Evaluasi Dampak:**  
+- Penggunaan berbagai model memberikan variasi perspektif dan validasi silang performa.
+- Logistic Regression menunjukkan performa sempurna (semua metrik = 1.000), sangat andal untuk klasifikasi biner sederhana.
+- XGBoost dan SVM juga menunjukkan performa sangat tinggi dan seimbang pada semua metrik.
+- Random Forest dan Naive Bayes tetap memberikan hasil yang baik dan relevan untuk analisis perbandingan.
+- Pendekatan ini terbukti efektif dalam mengidentifikasi model terbaik secara objektif berdasarkan data evaluasi.
+
+---
+
+### 🔹 Solution 2:
+**Memilih model terbaik berdasarkan nilai F1-score, mengingat pentingnya keseimbangan antara precision dan recall.**
+
+**Evaluasi Dampak:**  
+- F1-score terbukti efektif sebagai acuan pemilihan model.
+- Model seperti XGBoost dan Logistic Regression memiliki F1-score mendekati sempurna, memastikan klasifikasi yang andal dan aman.
+
+---
+
+## Kesimpulan
+
+Hasil evaluasi model **sepenuhnya mendukung Business Understanding**:
+
+- ✅ Semua *problem statement* terjawab dengan baik.
+- 🎯 *Goals* tercapai secara penuh, didukung dengan metrik evaluasi lengkap.
+- 🚀 *Solusi* yang diterapkan terbukti efektif dan berdampak positif, terutama dalam konteks medis.
+
+Model seperti **Logistic Regression** dan **XGBoost** sangat cocok digunakan sebagai alat bantu skrining awal risiko stroke berdasarkan gejala sederhana. Ini memberi potensi besar untuk diterapkan pada layanan kesehatan primer atau aplikasi masyarakat berbasis teknologi.
 
